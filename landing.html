@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coming Soon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8ff57;
+      --accent-dim: rgba(200,255,87,0.12);
+      --text: #f0f0ec;
+      --muted: rgba(240,240,236,0.45);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── noise grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ── radial glow ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(200,255,87,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── layout ── */
+    main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      gap: 0;
+    }
+
+    /* ── pill badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(200,255,87,0.25);
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.1s forwards;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── headline ── */
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 10vw, 7.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.25s forwards;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    /* ── sub ── */
+    .sub {
+      max-width: 420px;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+    }
+
+    /* ── email form ── */
+    .form-wrap {
+      display: flex;
+      gap: 0;
+      max-width: 420px;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      overflow: hidden;
+      transition: border-color 0.2s;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.55s forwards;
+    }
+
+    .form-wrap:focus-within {
+      border-color: rgba(200,255,87,0.35);
+    }
+
+    .form-wrap input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0 1.1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.9rem;
+      color: var(--text);
+      height: 52px;
+    }
+
+    .form-wrap input::placeholder {
+      color: var(--muted);
+    }
+
+    .form-wrap button {
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #0a0a0f;
+      padding: 0 1.4rem;
+      height: 52px;
+      white-space: nowrap;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .form-wrap button:hover { opacity: 0.85; }
+    .form-wrap button:active { transform: scale(0.97); }
+
+    .form-note {
+      margin-top: 0.9rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.65s forwards;
+    }
+
+    /* ── divider ── */
+    .divider {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--border), transparent);
+      margin: 4rem 0;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
+    /* ── countdown ── */
+    .countdown {
+      display: flex;
+      gap: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.8s forwards;
+    }
+
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .countdown-num {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .countdown-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.9s forwards;
+    }
+
+    /* ── animation ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── success state ── */
+    .success-msg {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--accent);
+      margin-top: 0.6rem;
+    }
+
+    @media (max-width: 480px) {
+      .countdown { gap: 1.5rem; }
+      .form-wrap button { padding: 0 1rem; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<main>
+  <span class="badge"><span class="badge-dot"></span>Something is brewing</span>
+
+  <h1>We're almost<br><em>ready.</em></h1>
+
+  <p class="sub">Something worth the wait is on its way. Drop your email and we'll make sure you're first to know when the doors open.</p>
+
+  <div class="form-wrap" id="formWrap">
+    <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email" />
+    <button onclick="handleSubmit()">Notify me</button>
+  </div>
+
+  <p class="form-note" id="formNote">No spam. Unsubscribe anytime.</p>
+  <div class="success-msg" id="successMsg">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.5" stroke="#c8ff57" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="#c8ff57" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    You're on the list!
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="countdown" id="countdown">
+    <div class="countdown-item"><span class="countdown-num" id="days">00</span><span class="countdown-label">Days</span></div>
+    <div class="countdown-item"><span class="countdown-num" id="hours">00</span><span class="countdown-label">Hours</span></div>
+    <div class="countdown-item"><span class="countdown-num" id="mins">00</span><span class="countdown-label">Minutes</span></div>
+    <div class="countdown-item"><span class="countdown-num" id="secs">00</span><span class="countdown-label">Seconds</span></div>
+  </div>
+</main>
+
+<footer>© 2025 · All rights reserved</footer>
+
+<script>
+  // ── Set your launch date here ──
+  const LAUNCH = new Date('2025-12-31T00:00:00');
+
+  function pad(n) { return String(n).padStart(2,'0'); }
+
+  function tick() {
+    const diff = LAUNCH - Date.now();
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML = '<p style="color:var(--accent);font-family:Syne,sans-serif;font-weight:700;font-size:1.5rem;">We\'re live! 🎉</p>';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('days').textContent  = pad(d);
+    document.getElementById('hours').textContent = pad(h);
+    document.getElementById('mins').textContent  = pad(m);
+    document.getElementById('secs').textContent  = pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+
+  // ── Email form ──
+  function handleSubmit() {
+    const val = document.getElementById('emailInput').value.trim();
+    if (!val || !val.includes('@')) {
+      document.getElementById('emailInput').style.borderBottom = '1px solid #ff6b6b';
+      return;
+    }
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('formNote').style.display = 'none';
+    const s = document.getElementById('successMsg');
+    s.style.display = 'flex';
+    s.style.animation = 'fadeUp 0.5s ease forwards';
+  }
+</script>
+</body>
+</html>
